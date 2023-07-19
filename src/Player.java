@@ -7,9 +7,9 @@ public class Player {
     private Inventory inv;
     Scanner scan = new Scanner(System.in);
 
-
     public Player(String name) {
         this.name = name;
+        this.inv=new Inventory();
     }
 
     public void selectCha(){

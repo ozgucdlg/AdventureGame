@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Generated Game and Character classes">
-      <change afterPath="$PROJECT_DIR$/src/BattleLoc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/NormalLoc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Obstacle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SafeHouse.java" afterDir="false" />
+    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Generated Maps and locations">
+      <change afterPath="$PROJECT_DIR$/src/ToolStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Inventory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Location.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
@@ -35,13 +33,6 @@
       </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GithubProjectSettings">
-    <option name="branchProtectionPatterns">
-      <list>
-        <option value="main" />
-      </list>
-    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -96,7 +87,21 @@
       <option name="project" value="LOCAL" />
       <updated>1688316405986</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Generated Maps and locations">
+      <created>1689788921518</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1689788921518</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Generated Maps and locations">
+      <created>1689789037174</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1689789037174</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -112,17 +117,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Generated Game and Character classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Generated Game and Character classes" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/NormalLoc.java</url>
-          <line>6</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Generated Maps and locations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Generated Maps and locations" />
   </component>
 </project>
