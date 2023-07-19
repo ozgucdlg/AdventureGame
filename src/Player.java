@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Player {
 
-    private int damage, healthy, money;
+    private int damage, healthy, money, rHealthy;
     private String name,cName;
     private Inventory inv;
     Scanner scan = new Scanner(System.in);
@@ -15,30 +15,18 @@ public class Player {
     public void selectCha(){
         switch(chaMenu()){
             case 1:
-                setcName("Samurai");
-                setDamage(5);
-                setHealthy(21);
-                setMoney(15);
+               initPlayer("Samurai",5,21,15);
                 break;
 
             case 2:
-                setcName("Archer");
-                setDamage(7);
-                setHealthy(18);
-                setMoney(20);
+                initPlayer("Archer",7,18,20);
                 break;
 
             case 3:
-                setcName("Cavailer");
-                setDamage(8);
-                setHealthy(24);
-                setMoney(5);
+               initPlayer("Cavailer",8,24,5);
                 break;
             default:
-                setcName("Samurai");
-                setDamage(5);
-                setHealthy(21);
-                setMoney(15);
+                initPlayer("Samurai", 5,21,15);
                 break;
         }
         System.out.println("Character : " + getcName() + "\tDamage: "+getDamage()+ "\tHealthy:" +getHealthy()+ "\tmoney:" +getMoney());
@@ -60,6 +48,14 @@ public class Player {
 
         return chaID;
 
+    }
+
+    public void initPlayer(String cName, int damage, int healthy, int money){
+        setName(cName);
+        setDamage(damage);
+        setHealthy(healthy);
+        setMoney(money);
+        setrHealthy(healthy);
     }
     public int getDamage() {
         return damage;
@@ -107,5 +103,13 @@ public class Player {
 
     public void setInv(Inventory inv) {
         this.inv = inv;
+    }
+
+    public int getrHealthy() {
+        return rHealthy;
+    }
+
+    public void setrHealthy(int rHealthy) {
+        this.rHealthy = rHealthy;
     }
 }
