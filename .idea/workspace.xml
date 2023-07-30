@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Merge remote-tracking branch 'github/master'">
+    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Added Archer's mechanism into ToolStore.">
+      <change afterPath="$PROJECT_DIR$/src/Bear.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Vampire.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Zombie.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ToolStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToolStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BattleLoc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BattleLoc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Obstacle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Obstacle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690728337885</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added Archer's mechanism into ToolStore.">
+      <created>1690737529831</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1690737529831</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +134,7 @@
     <MESSAGE value="Generated Maps and locations" />
     <MESSAGE value="Generated Tool store and inventory store" />
     <MESSAGE value="Merge remote-tracking branch 'github/master'" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'github/master'" />
+    <MESSAGE value="Added Archer's mechanism into ToolStore." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Archer's mechanism into ToolStore." />
   </component>
 </project>
