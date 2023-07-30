@@ -29,7 +29,7 @@ public class Player {
                 initPlayer("Samurai", 5,21,15);
                 break;
         }
-        System.out.println("Character : " + getcName() + "\tDamage: "+getDamage()+ "\tHealthy:" +getHealthy()+ "\tmoney:" +getMoney());
+        System.out.println("Character created : " + getcName() + "\tDamage: "+getDamage()+ "\tHealthy:" +getHealthy()+ "\tmoney:" +getMoney());
     }
 
     public int chaMenu(){
@@ -38,7 +38,7 @@ public class Player {
         System.out.println("2- Archer    \t damage :7 \t healthy:18 \t money:20");
         System.out.println("3- Cavalier  \t damage :8 \t healthy:24 \t money:5");
 
-        System.out.print("Cgaracter selection is :");
+        System.out.print("Character selection is : ");
         int chaID= scan.nextInt();
 
         while(chaID < 1  || chaID> 3 ){
@@ -49,9 +49,13 @@ public class Player {
         return chaID;
 
     }
+    public int  getTotalDamage(){
+       return this.getDamage() + this.getInv().getDamage();
+    }
+
 
     public void initPlayer(String cName, int damage, int healthy, int money){
-        setName(cName);
+        setcName(cName);
         setDamage(damage);
         setHealthy(healthy);
         setMoney(money);
