@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Created the battle algorithm.">
+    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Finalizing the game and debugging with tests.">
+      <change afterPath="$PROJECT_DIR$/src/asset/adventure game architecture.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BattleLoc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BattleLoc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SafeHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SafeHouse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,13 +39,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ozguc/eclipse-workspace/AdventureGame&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/ozguc/eclipse-workspace/AdventureGame/src/asset"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ozguc\eclipse-workspace\AdventureGame\src\asset" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -134,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690810717810</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Finalizing the game and debugging with tests.">
+      <created>1690812389171</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1690812389171</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -157,6 +167,7 @@
     <MESSAGE value="Generated Bear, Zombie, Vampire classes and battleLoc implemented." />
     <MESSAGE value="Generated Cave, Forest, River" />
     <MESSAGE value="Created the battle algorithm." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created the battle algorithm." />
+    <MESSAGE value="Finalizing the game and debugging with tests." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finalizing the game and debugging with tests." />
   </component>
 </project>
