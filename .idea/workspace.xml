@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Added Archer's mechanism into ToolStore.">
-      <change afterPath="$PROJECT_DIR$/src/Bear.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Vampire.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Zombie.java" afterDir="false" />
+    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Generated Bear, Zombie, Vampire classes and battleLoc implemented.">
+      <change afterPath="$PROJECT_DIR$/src/Cave.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Forest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/River.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BattleLoc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BattleLoc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Obstacle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Obstacle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +115,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690737529831</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Generated Bear, Zombie, Vampire classes and battleLoc implemented.">
+      <created>1690744038314</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1690744038314</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -135,6 +142,7 @@
     <MESSAGE value="Generated Tool store and inventory store" />
     <MESSAGE value="Merge remote-tracking branch 'github/master'" />
     <MESSAGE value="Added Archer's mechanism into ToolStore." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Archer's mechanism into ToolStore." />
+    <MESSAGE value="Generated Bear, Zombie, Vampire classes and battleLoc implemented." />
+    <option name="LAST_COMMIT_MESSAGE" value="Generated Bear, Zombie, Vampire classes and battleLoc implemented." />
   </component>
 </project>
