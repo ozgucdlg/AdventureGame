@@ -113,7 +113,7 @@ public class ToolStore extends NormalLoc{
             case 1:
                 damage=2;
                 wName="Tabanca";
-                price=5;
+                price=25;
                 break;
 
             case 2:
