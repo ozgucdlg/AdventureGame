@@ -1,6 +1,6 @@
 public class SafeHouse extends NormalLoc{
     SafeHouse(Player player) {
-        super(player, "Guvenli ev");
+        super(player, "SafeHouse");
     }
 
     public boolean getLocation(){

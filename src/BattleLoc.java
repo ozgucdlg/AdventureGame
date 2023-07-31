@@ -64,7 +64,7 @@ public abstract  class BattleLoc extends Location{
                     }
 
                 }else{
-                    break;
+                    return false;
                 }
             }
 

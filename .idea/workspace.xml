@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Generated Cave, Forest, River">
+    <list default="true" id="06d3c816-f94d-4406-ab1c-356cfdf90a52" name="Changes" comment="Created the battle algorithm.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BattleLoc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BattleLoc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cave.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Forest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Forest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/River.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/River.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ToolStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToolStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SafeHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SafeHouse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690805675891</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Created the battle algorithm.">
+      <created>1690810717810</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1690810717810</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,6 +156,7 @@
     <MESSAGE value="Added Archer's mechanism into ToolStore." />
     <MESSAGE value="Generated Bear, Zombie, Vampire classes and battleLoc implemented." />
     <MESSAGE value="Generated Cave, Forest, River" />
-    <option name="LAST_COMMIT_MESSAGE" value="Generated Cave, Forest, River" />
+    <MESSAGE value="Created the battle algorithm." />
+    <option name="LAST_COMMIT_MESSAGE" value="Created the battle algorithm." />
   </component>
 </project>
