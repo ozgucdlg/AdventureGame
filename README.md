@@ -10,7 +10,7 @@ That project aims that is going to show up object-orientated approach and how to
 
  ## Architecture
 
- ![Application]("src\asset\adventure game architecture.png")
+ ![Application]("src/asset/game.png")
 
  ## Test
  Application has tested with debugging and each scenarious were monitored(__Happy path, Edge case__ etc).
