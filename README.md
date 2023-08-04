@@ -10,7 +10,7 @@ That project aims that is going to show up object-orientated approach and how to
 
  ## Architecture
 
- ![Application]("src/asset/adventure game architecture.png")
+ ![Application]("https://github.com/ozgucdlg/AdventureGame/blob/master/game.png")
 
  ## Test
  The application has been tested with debugging and each scenario was monitored(__Happy path, Edge case__, etc).
