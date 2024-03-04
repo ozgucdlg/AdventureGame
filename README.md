@@ -20,8 +20,9 @@ The application was deployed on GitHub applying each step of sprints. There is o
 
 ## Improvements
  - Handle  hardware updates,
- - The necessity of Time management in the real-time project,
+ - The necessities of Time management in the real-time project,
  - Agile techniques with implementations.
+ - Obtained how to work colloboratively.
  
 
  
