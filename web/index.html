@@ -15,6 +15,18 @@
 
     <main class="layout">
       <section class="log-panel">
+        <div id="arena" class="arena" hidden>
+          <div id="arenaPlayer" class="combatant player-side">
+            <div class="sprite" id="arenaPlayerSprite">🥷</div>
+            <div class="combatant-name" id="arenaPlayerName">-</div>
+          </div>
+          <div class="vs">⚔️</div>
+          <div id="arenaEnemy" class="combatant enemy-side">
+            <div class="sprite" id="arenaEnemySprite">❔</div>
+            <div class="combatant-name" id="arenaEnemyName">-</div>
+          </div>
+        </div>
+
         <div id="log" class="log" aria-live="polite"></div>
 
         <div id="textInputRow" class="input-row" hidden>
