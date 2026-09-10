@@ -9,12 +9,18 @@
 <body>
   <div class="app">
     <header class="app-header">
-      <h1>🗡️ Adventure Game</h1>
-      <button id="restartBtn" class="ghost-btn" hidden>Play Again</button>
+      <div class="title-block">
+        <h1>🗡️ Adventure Game</h1>
+        <span id="sceneBadge" class="scene-badge">📍 Intro</span>
+      </div>
+      <div class="header-actions">
+        <button id="muteBtn" class="ghost-btn icon-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+        <button id="restartBtn" class="ghost-btn" hidden>Play Again</button>
+      </div>
     </header>
 
     <main class="layout">
-      <section class="log-panel">
+      <section class="log-panel" id="logPanel">
         <div id="arena" class="arena" hidden>
           <div id="arenaPlayer" class="combatant player-side">
             <div class="sprite" id="arenaPlayerSprite">🥷</div>

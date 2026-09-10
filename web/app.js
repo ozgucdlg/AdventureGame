@@ -26,12 +26,121 @@
 
   const ANIM_STEP = 650;
 
+  const SCENE_LABELS = {
+    Intro: '📍 Intro',
+    MainMenu: '📍 Camp',
+    SafeHouse: '🏠 Safe House',
+    Cave: '🕳️ Cave',
+    Forest: '🌲 Forest',
+    River: '🌊 River',
+    Store: '🏪 Store',
+    GameOver: '💀 Defeat',
+    Victory: '🏆 Victory'
+  };
+
+  // Small self-contained sound engine (Web Audio API, synthesized -- no audio files).
+  const Sound = (function () {
+    let ctx = null, masterGain = null, musicGain = null, sfxGain = null;
+    let ambientTimer = null, ambientStep = 0, muted = false;
+    const AMBIENT_NOTES = [220, 262, 294, 330];
+
+    function ensureCtx() {
+      if (!ctx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        ctx = new Ctx();
+        masterGain = ctx.createGain();
+        masterGain.gain.value = muted ? 0 : 1;
+        masterGain.connect(ctx.destination);
+        musicGain = ctx.createGain();
+        musicGain.gain.value = 0.06;
+        musicGain.connect(masterGain);
+        sfxGain = ctx.createGain();
+        sfxGain.gain.value = 0.25;
+        sfxGain.connect(masterGain);
+      }
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    }
+
+    function tone(freq, dur, type, dest, delay, vol) {
+      const c = ensureCtx();
+      if (!c) return;
+      const osc = c.createOscillator();
+      const g = c.createGain();
+      osc.type = type || 'square';
+      osc.frequency.value = freq;
+      osc.connect(g);
+      g.connect(dest);
+      const t0 = c.currentTime + (delay || 0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(vol == null ? 1 : vol, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.02);
+    }
+
+    function click() {
+      const c = ensureCtx();
+      if (!c) return;
+      tone(520, 0.06, 'square', sfxGain);
+    }
+    function playerAttack() {
+      const c = ensureCtx();
+      if (!c) return;
+      tone(660, 0.08, 'square', sfxGain);
+    }
+    function hit() {
+      const c = ensureCtx();
+      if (!c) return;
+      tone(140, 0.12, 'sawtooth', sfxGain);
+      tone(90, 0.15, 'square', sfxGain, 0.02);
+    }
+    function defeat() {
+      const c = ensureCtx();
+      if (!c) return;
+      [440, 370, 300, 220].forEach((f, i) => tone(f, 0.18, 'triangle', sfxGain, i * 0.09));
+    }
+    function victory() {
+      const c = ensureCtx();
+      if (!c) return;
+      [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, 'square', sfxGain, i * 0.11));
+    }
+    function gameOver() {
+      const c = ensureCtx();
+      if (!c) return;
+      tone(180, 0.5, 'sawtooth', sfxGain);
+      tone(120, 0.6, 'sawtooth', sfxGain, 0.15);
+    }
+    function startAmbient() {
+      const c = ensureCtx();
+      if (!c || ambientTimer) return;
+      ambientTimer = setInterval(() => {
+        const f = AMBIENT_NOTES[ambientStep % AMBIENT_NOTES.length];
+        tone(f, 1.8, 'sine', musicGain, 0, 0.5);
+        ambientStep++;
+      }, 1400);
+    }
+    function setMuted(m) {
+      muted = m;
+      if (masterGain) masterGain.gain.value = m ? 0 : 1;
+    }
+    function isMuted() {
+      return muted;
+    }
+
+    return { ensureCtx, click, playerAttack, hit, defeat, victory, gameOver, startAmbient, setMuted, isMuted };
+  })();
+
   const logEl = document.getElementById('log');
   const optionsEl = document.getElementById('options');
   const textRow = document.getElementById('textInputRow');
   const nameInput = document.getElementById('nameInput');
   const nameSubmit = document.getElementById('nameSubmit');
   const restartBtn = document.getElementById('restartBtn');
+  const muteBtn = document.getElementById('muteBtn');
+  const sceneBadge = document.getElementById('sceneBadge');
+  const logPanel = document.getElementById('logPanel');
   const playerCard = document.getElementById('playerCard');
   const enemyCard = document.getElementById('enemyCard');
 
@@ -77,7 +186,10 @@
         btn.appendChild(detail);
       }
 
-      btn.addEventListener('click', () => sendAction(opt.type, opt.value));
+      btn.addEventListener('click', () => {
+        Sound.click();
+        sendAction(opt.type, opt.value);
+      });
       optionsEl.appendChild(btn);
     }
   }
@@ -86,10 +198,37 @@
     optionsEl.querySelectorAll('button').forEach((b) => { b.disabled = !enabled; });
   }
 
+  function renderScene(view) {
+    const scene = view.scene || 'MainMenu';
+    logPanel.dataset.scene = scene;
+    sceneBadge.textContent = SCENE_LABELS[scene] || ('📍 ' + scene);
+  }
+
+  function burstParticles(box, emojis) {
+    for (let i = 0; i < emojis.length; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating-particle';
+      el.textContent = emojis[i];
+      el.style.left = (40 + Math.random() * 20) + '%';
+      el.style.top = '10%';
+      el.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+      box.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  }
+
+  function hasTerminalEvent(events) {
+    return (events || []).some((e) => e.type === 'victory' || e.type === 'gameOver');
+  }
+
   function renderArena(view) {
     const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
-    arena.hidden = !inBattle;
-    if (!inBattle) return;
+    const show = inBattle || hasTerminalEvent(view.events);
+    if (!show) {
+      arena.hidden = true;
+      return;
+    }
+    arena.hidden = false;
     if (view.player) {
       arenaPlayerSprite.textContent = spriteFor(view.player.class);
       arenaPlayerName.textContent = view.player.name || 'You';
@@ -97,10 +236,12 @@
     if (view.enemy) {
       arenaEnemySprite.textContent = spriteFor(view.enemy.name);
       arenaEnemyName.textContent = view.enemy.name + ' (' + view.enemy.index + '/' + view.enemy.total + ')';
-    } else {
+    } else if (inBattle) {
       arenaEnemySprite.textContent = '❔';
       arenaEnemyName.textContent = '???';
     }
+    // else: enemy already null because the battle just ended (victory/gameOver) --
+    // leave the last-shown sprite in place so its animation stays visible.
   }
 
   function floatDamage(box, text, cls) {
@@ -117,6 +258,7 @@
 
   function runEvent(ev) {
     if (ev.type === 'playerAttack') {
+      Sound.playerAttack();
       arenaPlayerBox.classList.add('lunge');
       arenaEnemyBox.classList.add('hit');
       floatDamage(arenaEnemyBox, dmgText(ev.amount), 'enemy-dmg');
@@ -125,6 +267,7 @@
         arenaEnemyBox.classList.remove('hit');
       }, 400);
     } else if (ev.type === 'enemyAttack') {
+      Sound.hit();
       arenaEnemyBox.classList.add('lunge');
       arenaPlayerBox.classList.add('hit');
       floatDamage(arenaPlayerBox, dmgText(ev.amount), 'player-dmg');
@@ -133,9 +276,16 @@
         arenaPlayerBox.classList.remove('hit');
       }, 400);
     } else if (ev.type === 'enemyDefeated') {
+      Sound.defeat();
       arenaEnemyBox.classList.add('defeated');
       setTimeout(() => arenaEnemyBox.classList.remove('defeated'), 550);
+    } else if (ev.type === 'victory') {
+      Sound.victory();
+      arenaPlayerBox.classList.add('cheer');
+      burstParticles(arenaPlayerBox, ['✨', '🎉', '⭐']);
+      setTimeout(() => arenaPlayerBox.classList.remove('cheer'), 1200);
     } else if (ev.type === 'gameOver') {
+      Sound.gameOver();
       arenaPlayerBox.classList.add('defeated');
     }
   }
@@ -186,6 +336,7 @@
 
   function render(view) {
     appendLog(view.log || []);
+    renderScene(view);
     renderArena(view);
     renderPlayer(view.player);
     renderEnemy(view.enemy);
@@ -203,6 +354,11 @@
     if (totalDelay > 0) {
       setOptionsEnabled(false);
       setTimeout(() => setOptionsEnabled(true), totalDelay);
+    }
+
+    const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
+    if (!inBattle && hasTerminalEvent(view.events)) {
+      setTimeout(() => { arena.hidden = true; }, totalDelay + 300);
     }
   }
 
@@ -236,6 +392,21 @@
     if (e.key === 'Enter') nameSubmit.click();
   });
   restartBtn.addEventListener('click', () => sendAction('restart', ''));
+
+  let audioStarted = false;
+  function startAudioOnce() {
+    if (audioStarted) return;
+    audioStarted = true;
+    Sound.ensureCtx();
+    Sound.startAmbient();
+  }
+  document.addEventListener('click', startAudioOnce, { once: true });
+
+  muteBtn.addEventListener('click', () => {
+    const nowMuted = !Sound.isMuted();
+    Sound.setMuted(nowMuted);
+    muteBtn.textContent = nowMuted ? '🔇' : '🔊';
+  });
 
   begin();
 })();
