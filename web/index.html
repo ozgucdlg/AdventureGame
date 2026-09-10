@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adventure Game</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>🗡️ Adventure Game</h1>
+      <button id="restartBtn" class="ghost-btn" hidden>Play Again</button>
+    </header>
+
+    <main class="layout">
+      <section class="log-panel">
+        <div id="log" class="log" aria-live="polite"></div>
+
+        <div id="textInputRow" class="input-row" hidden>
+          <input id="nameInput" type="text" placeholder="Type your name…" maxlength="24" autocomplete="off">
+          <button id="nameSubmit">Enter</button>
+        </div>
+
+        <div id="options" class="options" hidden></div>
+      </section>
+
+      <aside class="sidebar">
+        <div id="playerCard" class="card" hidden>
+          <h2>Player</h2>
+          <div class="stat-row"><span>Name</span><strong id="pName">-</strong></div>
+          <div class="stat-row"><span>Class</span><strong id="pClass">-</strong></div>
+          <div class="stat-row"><span>Health</span><strong id="pHealth">-</strong></div>
+          <div class="bar"><div id="pHealthBar" class="bar-fill health"></div></div>
+          <div class="stat-row"><span>Damage</span><strong id="pDamage">-</strong></div>
+          <div class="stat-row"><span>Money</span><strong id="pMoney">-</strong></div>
+          <div class="stat-row"><span>Weapon</span><strong id="pWeapon">-</strong></div>
+          <div class="stat-row"><span>Armor</span><strong id="pArmor">-</strong></div>
+          <div class="inventory">
+            <span id="invFood" class="chip">Food</span>
+            <span id="invWater" class="chip">Water</span>
+            <span id="invFirewood" class="chip">Firewood</span>
+          </div>
+        </div>
+
+        <div id="enemyCard" class="card enemy-card" hidden>
+          <h2 id="eName">Enemy</h2>
+          <div class="stat-row"><span>Health</span><strong id="eHealth">-</strong></div>
+          <div class="bar"><div id="eHealthBar" class="bar-fill enemy"></div></div>
+          <div class="stat-row"><span>Damage</span><strong id="eDamage">-</strong></div>
+          <div class="stat-row"><span>Progress</span><strong id="eProgress">-</strong></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
