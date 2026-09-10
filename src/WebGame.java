@@ -28,7 +28,7 @@ public class WebGame {
     private int defObsHealth;
 
     public WebGame() {
-        log.add("Welcome to the Adventure Game !");
+        log.add("🎮 Welcome to the Adventure Game!");
     }
 
     public GameView begin() {
@@ -43,7 +43,7 @@ public class WebGame {
         obstacle = null;
         log.clear();
         events.clear();
-        log.add("Welcome to the Adventure Game !");
+        log.add("🎮 Welcome to the Adventure Game!");
         return begin();
     }
 
@@ -63,8 +63,7 @@ public class WebGame {
             case 3: player.initPlayer("Cavailer", 8, 24, 5); break;
             default: player.initPlayer("Samurai", 5, 21, 15); break;
         }
-        log.add("Character created : " + player.getcName() + "\tDamage: " + player.getDamage()
-                + "\tHealthy:" + player.getHealthy() + "\tmoney:" + player.getMoney());
+        log.add("✅ " + player.getcName() + " is ready for adventure!");
         state = State.MAIN_MENU;
         scene = "MainMenu";
         return view("The place you want go :");
@@ -75,22 +74,21 @@ public class WebGame {
         switch (id) {
             case 1:
                 if (player.getInv().isFirewood() && player.getInv().isFood() && player.getInv().isWater()) {
-                    log.add("Congrats , you won the game 1");
+                    log.add("🏆 You gathered everything you need — you win!");
                     won = true;
                     scene = "Victory";
                     state = State.GAME_OVER;
                     return view(null);
                 }
                 player.setHealthy(player.getrHealthy());
-                log.add("you are get health...............");
-                log.add("Now, you are in safe house...");
+                log.add("🔥 You rest at the Safe House and recover.");
                 scene = "SafeHouse";
                 return view("The place you want go :");
             case 2: return enterBattle("Cave", new Zombie(), "Food");
             case 3: return enterBattle("Forest", new Vampire(), "Firewood");
             case 4: return enterBattle("River", new Bear(), "Water");
             case 5:
-                log.add("Money :  " + player.getMoney());
+                log.add("🏪 Welcome to the Store. You have " + player.getMoney() + " gold.");
                 state = State.STORE_MENU;
                 scene = "Store";
                 return view("your choice :");
@@ -106,8 +104,7 @@ public class WebGame {
         obsCount = obstacle.count();
         enemyIndex = 0;
         scene = name;
-        log.add("Now, rigtht here  " + name + " ");
-        log.add("Be careful, there are  here  " + obsCount + " times " + obstacle.getName());
+        log.add("⚠️ You enter the " + name + ". " + obsCount + "x " + obstacle.getName() + " lie in wait.");
         state = State.BATTLE_DECISION;
         return view("<S>avas or <K>ac :");
     }
@@ -118,6 +115,7 @@ public class WebGame {
             beginEnemy();
             return view("<V>ur or <Kac> :");
         }
+        log.add("🏃 You slip away before the fight begins.");
         state = State.MAIN_MENU;
         scene = "MainMenu";
         return view("The place you want go :");
@@ -125,16 +123,7 @@ public class WebGame {
 
     private void beginEnemy() {
         defObsHealth = obstacle.getHealth();
-        log.add("Player stats");
-        log.add("Health : " + player.getHealthy());
-        log.add("Damage : " + player.getDamage());
-        log.add("Money : " + player.getMoney());
-        if (player.getInv().getDamage() > 0) log.add("Weapon : " + player.getInv().getwName());
-        if (player.getInv().getArmor() > 0) log.add("Armor : " + player.getInv().getaName());
-        log.add(obstacle.getName() + " stats");
-        log.add("Health : " + obstacle.getHealth());
-        log.add("Damage : " + obstacle.getDamage());
-        log.add("Money : " + obstacle.getAward());
+        log.add("⚔️ " + obstacle.getName() + " (" + (enemyIndex + 1) + "/" + obsCount + ") blocks your path!");
         state = State.COMBAT;
     }
 
@@ -142,46 +131,42 @@ public class WebGame {
         events.add(new GameView.Event(type, target, amount));
     }
 
-    private void afterHit() {
-        log.add("Player health : " + player.getHealthy());
-        log.add(obstacle.getName() + " health : " + obstacle.getHealth());
-    }
-
     public GameView combatAction(String choice) {
         if (state != State.COMBAT) return error("Not expecting a combat action right now.");
         if (!"attack".equalsIgnoreCase(choice)) {
+            log.add("🏃 You break off the fight.");
             event("flee", null, 0);
             state = State.MAIN_MENU;
             scene = "MainMenu";
             return view("The place you want go :");
         }
 
-        log.add("You hit !");
         int playerDmg = player.getTotalDamage();
         obstacle.setHealth(obstacle.getHealth() - playerDmg);
         event("playerAttack", "enemy", playerDmg);
-        afterHit();
+        log.add("🗡️ You hit the " + obstacle.getName() + " for " + playerDmg + " damage!"
+                + (obstacle.getHealth() > 0 ? " (" + obstacle.getHealth() + " HP left)" : ""));
 
         if (obstacle.getHealth() > 0) {
-            log.add("Enemy hit you ! ");
             int enemyDmg = obstacle.getDamage() - player.getInv().getArmor();
             player.setrHealthy(player.getHealthy() - enemyDmg);
             event("enemyAttack", "player", enemyDmg);
-            afterHit();
+            log.add(enemyDmg > 0
+                    ? "💢 The " + obstacle.getName() + " strikes back for " + enemyDmg + " damage!"
+                    : "🛡️ Your armor blocks the " + obstacle.getName() + "'s attack!");
             return view("<V>ur or <Kac> :");
         }
 
         event("enemyDefeated", "enemy", 0);
 
         if (obstacle.getHealth() < player.getHealthy()) {
-            log.add("You beat the enemy ! ");
             player.setMoney(player.getMoney() + obstacle.getAward());
-            log.add("New amount of money : " + player.getMoney());
+            log.add("💀 You defeated the " + obstacle.getName() + "! +" + obstacle.getAward()
+                    + "g (total: " + player.getMoney() + "g)");
             obstacle.setHealth(defObsHealth);
-            log.add("--------------------------------");
         } else {
             if (player.getHealthy() <= 0) {
-                log.add("Oyun bitti !!");
+                log.add("☠️ You have fallen... Game Over.");
                 event("gameOver", null, 0);
                 scene = "GameOver";
                 state = State.GAME_OVER;
@@ -195,7 +180,7 @@ public class WebGame {
         enemyIndex++;
 
         if (player.getHealthy() <= 0) {
-            log.add("Oyun bitti !!");
+            log.add("☠️ You have fallen... Game Over.");
             event("gameOver", null, 0);
             scene = "GameOver";
             state = State.GAME_OVER;
@@ -207,15 +192,15 @@ public class WebGame {
             return view("<V>ur or <Kac> :");
         }
 
-        log.add(battleLocName + " in the are, you beat all the enemies !!");
+        log.add("🎉 " + battleLocName + " cleared!");
         if ("Food".equals(battleAward) && !player.getInv().isFood()) {
-            log.add(battleAward + " you won!!  ");
+            log.add("🎁 You found Food!");
             player.getInv().setFood(true);
         } else if ("Water".equals(battleAward) && !player.getInv().isWater()) {
-            log.add(battleAward + " you won!!  ");
+            log.add("🎁 You found Water!");
             player.getInv().setWater(true);
         } else if ("Firewood".equals(battleAward) && !player.getInv().isFirewood()) {
-            log.add(battleAward + " you won!!  ");
+            log.add("🎁 You found Firewood!");
             player.getInv().setFirewood(true);
         }
         event("victory", battleAward, 0);
@@ -233,7 +218,7 @@ public class WebGame {
             state = State.STORE_ARMOR;
             return view("Select an armor :");
         }
-        log.add("program is cancelling...");
+        log.add("🚪 You leave the counter.");
         state = State.MAIN_MENU;
         scene = "MainMenu";
         return view("The place you want go :");
@@ -247,19 +232,18 @@ public class WebGame {
             case 1: damage = 2; wName = "Tabanca"; price = 25; break;
             case 2: damage = 3; wName = "Kilic"; price = 35; break;
             case 3: damage = 7; wName = "Tufek"; price = 45; break;
-            case 4: log.add("program is cancelling..."); break;
-            default: log.add("invalid processs..."); break;
+            case 4: log.add("🚪 Maybe next time."); break;
+            default: log.add("❓ That's not for sale."); break;
         }
         if (price > 0) {
             if (player.getMoney() > price) {
                 player.getInv().setDamage(damage);
                 player.getInv().setwName(wName);
                 player.setMoney(player.getMoney() - price);
-                log.add(wName + " you bought, the previous damage : " + player.getDamage()
-                        + "the new damage  " + player.getTotalDamage());
-                log.add("the rest of the money : " + player.getMoney());
+                log.add("🔫 Bought " + wName + "! Total damage now " + player.getTotalDamage()
+                        + ". (" + player.getMoney() + "g left)");
             } else {
-                log.add("Your money is not enough to go !!");
+                log.add("💸 Not enough gold for that.");
             }
         }
         state = State.MAIN_MENU;
@@ -275,18 +259,18 @@ public class WebGame {
             case 1: avoid = 1; aName = "Light Armor"; price = 15; break;
             case 2: avoid = 3; aName = "Middle Armor"; price = 25; break;
             case 3: avoid = 5; aName = "Heavy Armor"; price = 40; break;
-            case 4: log.add("program is cancelling..."); break;
-            default: log.add("invalid processs..."); break;
+            case 4: log.add("🚪 Maybe next time."); break;
+            default: log.add("❓ That's not for sale."); break;
         }
         if (price > 0) {
             if (player.getMoney() >= price) {
                 player.getInv().setArmor(avoid);
                 player.getInv().setaName(aName);
                 player.setMoney(player.getMoney() - price);
-                log.add(aName + " you bought, blockaged damage : " + player.getInv().getArmor());
-                log.add("the rest of the money : " + player.getMoney());
+                log.add("🛡️ Bought " + aName + "! Blocks " + player.getInv().getArmor()
+                        + " damage. (" + player.getMoney() + "g left)");
             } else {
-                log.add("Your money is not enough to go !!");
+                log.add("💸 Not enough gold for that.");
             }
         }
         state = State.MAIN_MENU;

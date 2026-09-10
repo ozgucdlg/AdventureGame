@@ -144,13 +144,24 @@
   const playerCard = document.getElementById('playerCard');
   const enemyCard = document.getElementById('enemyCard');
 
-  const arena = document.getElementById('arena');
-  const arenaPlayerBox = document.getElementById('arenaPlayer');
-  const arenaEnemyBox = document.getElementById('arenaEnemy');
-  const arenaPlayerSprite = document.getElementById('arenaPlayerSprite');
-  const arenaPlayerName = document.getElementById('arenaPlayerName');
-  const arenaEnemySprite = document.getElementById('arenaEnemySprite');
-  const arenaEnemyName = document.getElementById('arenaEnemyName');
+  const battleScreen = document.getElementById('battleScreen');
+  const impactFlash = document.getElementById('impactFlash');
+  const vsIntro = document.getElementById('vsIntro');
+  const battlePlayerBox = document.getElementById('battlePlayer');
+  const battleEnemyBox = document.getElementById('battleEnemy');
+  const battlePlayerSprite = document.getElementById('battlePlayerSprite');
+  const battleEnemySprite = document.getElementById('battleEnemySprite');
+  const battleActionsEl = document.getElementById('battleActions');
+  const battleLogEl = document.getElementById('battleLog');
+  const hudPlayerIcon = document.getElementById('hudPlayerIcon');
+  const hudPlayerName = document.getElementById('hudPlayerName');
+  const hudPlayerBar = document.getElementById('hudPlayerBar');
+  const hudPlayerSub = document.getElementById('hudPlayerSub');
+  const hudEnemyIcon = document.getElementById('hudEnemyIcon');
+  const hudEnemyName = document.getElementById('hudEnemyName');
+  const hudEnemyBar = document.getElementById('hudEnemyBar');
+  const hudEnemySub = document.getElementById('hudEnemySub');
+  let wasInBattle = false;
 
   function appendLog(lines) {
     for (const line of lines) {
@@ -162,13 +173,13 @@
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  function renderOptions(view) {
-    optionsEl.innerHTML = '';
+  function renderOptionsInto(container, view) {
+    container.innerHTML = '';
     if (!view.options || view.options.length === 0) {
-      optionsEl.hidden = true;
+      container.hidden = true;
       return;
     }
-    optionsEl.hidden = false;
+    container.hidden = false;
     for (const opt of view.options) {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
@@ -190,12 +201,26 @@
         Sound.click();
         sendAction(opt.type, opt.value);
       });
-      optionsEl.appendChild(btn);
+      container.appendChild(btn);
+    }
+  }
+
+  function renderOptions(view) {
+    const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
+    if (inBattle) {
+      optionsEl.innerHTML = '';
+      optionsEl.hidden = true;
+      renderOptionsInto(battleActionsEl, view);
+    } else {
+      battleActionsEl.innerHTML = '';
+      battleActionsEl.hidden = true;
+      renderOptionsInto(optionsEl, view);
     }
   }
 
   function setOptionsEnabled(enabled) {
     optionsEl.querySelectorAll('button').forEach((b) => { b.disabled = !enabled; });
+    battleActionsEl.querySelectorAll('button').forEach((b) => { b.disabled = !enabled; });
   }
 
   function renderScene(view) {
@@ -221,27 +246,66 @@
     return (events || []).some((e) => e.type === 'victory' || e.type === 'gameOver');
   }
 
-  function renderArena(view) {
+  function appendBattleLog(lines) {
+    for (const line of lines) {
+      const div = document.createElement('div');
+      div.className = 'battle-log-line';
+      div.textContent = line;
+      battleLogEl.appendChild(div);
+    }
+    while (battleLogEl.children.length > 4) {
+      battleLogEl.removeChild(battleLogEl.firstChild);
+    }
+  }
+
+  function renderBattleScreen(view) {
     const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
     const show = inBattle || hasTerminalEvent(view.events);
+
     if (!show) {
-      arena.hidden = true;
+      battleScreen.hidden = true;
+      wasInBattle = false;
       return;
     }
-    arena.hidden = false;
+
+    battleScreen.hidden = false;
+    battleScreen.dataset.scene = view.scene || 'MainMenu';
+    appendBattleLog(view.log || []);
+
     if (view.player) {
-      arenaPlayerSprite.textContent = spriteFor(view.player.class);
-      arenaPlayerName.textContent = view.player.name || 'You';
+      hudPlayerIcon.textContent = spriteFor(view.player.class);
+      hudPlayerName.textContent = view.player.name || 'You';
+      const pct = Math.max(0, Math.min(100, (view.player.health / Math.max(1, view.player.maxHealth)) * 100));
+      hudPlayerBar.style.width = pct + '%';
+      hudPlayerSub.textContent = view.player.health + '/' + view.player.maxHealth + ' HP · ⚔️ ' + view.player.totalDamage;
+      battlePlayerSprite.textContent = spriteFor(view.player.class);
     }
+
     if (view.enemy) {
-      arenaEnemySprite.textContent = spriteFor(view.enemy.name);
-      arenaEnemyName.textContent = view.enemy.name + ' (' + view.enemy.index + '/' + view.enemy.total + ')';
+      hudEnemyIcon.textContent = spriteFor(view.enemy.name);
+      hudEnemyName.textContent = view.enemy.name + ' (' + view.enemy.index + '/' + view.enemy.total + ')';
+      const epct = Math.max(0, Math.min(100, (view.enemy.health / Math.max(1, view.enemy.maxHealth)) * 100));
+      hudEnemyBar.style.width = epct + '%';
+      hudEnemySub.textContent = Math.max(0, view.enemy.health) + '/' + view.enemy.maxHealth + ' HP · ⚔️ ' + view.enemy.damage;
+      battleEnemySprite.textContent = spriteFor(view.enemy.name);
     } else if (inBattle) {
-      arenaEnemySprite.textContent = '❔';
-      arenaEnemyName.textContent = '???';
+      hudEnemyIcon.textContent = '❔';
+      hudEnemyName.textContent = '???';
+      hudEnemyBar.style.width = '100%';
+      hudEnemySub.textContent = '-';
+      battleEnemySprite.textContent = '❔';
     }
     // else: enemy already null because the battle just ended (victory/gameOver) --
-    // leave the last-shown sprite in place so its animation stays visible.
+    // leave the last-shown sprite/HUD in place so the outcome animation stays visible.
+
+    if (!wasInBattle && inBattle) {
+      vsIntro.hidden = false;
+      void vsIntro.offsetWidth; // restart the animation
+      vsIntro.style.animation = 'none';
+      requestAnimationFrame(() => { vsIntro.style.animation = ''; });
+      setTimeout(() => { vsIntro.hidden = true; }, 900);
+    }
+    wasInBattle = inBattle;
   }
 
   function floatDamage(box, text, cls) {
@@ -256,37 +320,53 @@
     return amount > 0 ? ('-' + amount) : 'Blocked!';
   }
 
+  function flash(cls) {
+    impactFlash.classList.remove('flash-white', 'flash-red');
+    void impactFlash.offsetWidth;
+    impactFlash.classList.add(cls);
+  }
+
+  function shakeScreen() {
+    battleScreen.classList.remove('shake');
+    void battleScreen.offsetWidth;
+    battleScreen.classList.add('shake');
+  }
+
   function runEvent(ev) {
     if (ev.type === 'playerAttack') {
       Sound.playerAttack();
-      arenaPlayerBox.classList.add('lunge');
-      arenaEnemyBox.classList.add('hit');
-      floatDamage(arenaEnemyBox, dmgText(ev.amount), 'enemy-dmg');
+      flash('flash-white');
+      battlePlayerBox.classList.add('lunge');
+      battleEnemyBox.classList.add('hit');
+      floatDamage(battleEnemyBox, dmgText(ev.amount), 'enemy-dmg');
       setTimeout(() => {
-        arenaPlayerBox.classList.remove('lunge');
-        arenaEnemyBox.classList.remove('hit');
+        battlePlayerBox.classList.remove('lunge');
+        battleEnemyBox.classList.remove('hit');
       }, 400);
     } else if (ev.type === 'enemyAttack') {
       Sound.hit();
-      arenaEnemyBox.classList.add('lunge');
-      arenaPlayerBox.classList.add('hit');
-      floatDamage(arenaPlayerBox, dmgText(ev.amount), 'player-dmg');
+      flash('flash-red');
+      shakeScreen();
+      battleEnemyBox.classList.add('lunge');
+      battlePlayerBox.classList.add('hit');
+      floatDamage(battlePlayerBox, dmgText(ev.amount), 'player-dmg');
       setTimeout(() => {
-        arenaEnemyBox.classList.remove('lunge');
-        arenaPlayerBox.classList.remove('hit');
+        battleEnemyBox.classList.remove('lunge');
+        battlePlayerBox.classList.remove('hit');
       }, 400);
     } else if (ev.type === 'enemyDefeated') {
       Sound.defeat();
-      arenaEnemyBox.classList.add('defeated');
-      setTimeout(() => arenaEnemyBox.classList.remove('defeated'), 550);
+      battleEnemyBox.classList.add('defeated');
+      setTimeout(() => battleEnemyBox.classList.remove('defeated'), 550);
     } else if (ev.type === 'victory') {
       Sound.victory();
-      arenaPlayerBox.classList.add('cheer');
-      burstParticles(arenaPlayerBox, ['✨', '🎉', '⭐']);
-      setTimeout(() => arenaPlayerBox.classList.remove('cheer'), 1200);
+      battlePlayerBox.classList.add('cheer');
+      burstParticles(battlePlayerBox, ['✨', '🎉', '⭐']);
+      setTimeout(() => battlePlayerBox.classList.remove('cheer'), 1200);
     } else if (ev.type === 'gameOver') {
       Sound.gameOver();
-      arenaPlayerBox.classList.add('defeated');
+      shakeScreen();
+      battlePlayerBox.classList.add('defeated');
     }
   }
 
@@ -337,7 +417,7 @@
   function render(view) {
     appendLog(view.log || []);
     renderScene(view);
-    renderArena(view);
+    renderBattleScreen(view);
     renderPlayer(view.player);
     renderEnemy(view.enemy);
     renderOptions(view);
@@ -358,7 +438,7 @@
 
     const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
     if (!inBattle && hasTerminalEvent(view.events)) {
-      setTimeout(() => { arena.hidden = true; }, totalDelay + 300);
+      setTimeout(() => { battleScreen.hidden = true; }, totalDelay + 300);
     }
   }
 

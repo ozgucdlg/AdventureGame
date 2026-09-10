@@ -7,6 +7,40 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+  <div id="battleScreen" class="battle-screen" hidden>
+    <div class="impact-flash" id="impactFlash"></div>
+    <div class="vs-intro" id="vsIntro" hidden>VS</div>
+
+    <div class="battle-hud">
+      <div class="hud-card hud-player">
+        <div class="hud-name"><span id="hudPlayerIcon">🥷</span> <span id="hudPlayerName">-</span></div>
+        <div class="bar big"><div id="hudPlayerBar" class="bar-fill health"></div></div>
+        <div class="hud-sub" id="hudPlayerSub">-</div>
+      </div>
+      <div class="hud-vs">⚔️</div>
+      <div class="hud-card hud-enemy">
+        <div class="hud-name"><span id="hudEnemyName">-</span> <span id="hudEnemyIcon">❔</span></div>
+        <div class="bar big"><div id="hudEnemyBar" class="bar-fill enemy"></div></div>
+        <div class="hud-sub" id="hudEnemySub">-</div>
+      </div>
+    </div>
+
+    <div class="battle-stage">
+      <div id="battlePlayer" class="battle-combatant combatant player-side">
+        <div class="sprite big" id="battlePlayerSprite">🥷</div>
+        <div class="battle-shadow"></div>
+      </div>
+      <div id="battleEnemy" class="battle-combatant combatant enemy-side">
+        <div class="sprite big" id="battleEnemySprite">❔</div>
+        <div class="battle-shadow"></div>
+      </div>
+    </div>
+
+    <div class="battle-log" id="battleLog"></div>
+
+    <div class="battle-actions" id="battleActions"></div>
+  </div>
+
   <div class="app">
     <header class="app-header">
       <div class="title-block">
@@ -21,18 +55,6 @@
 
     <main class="layout">
       <section class="log-panel" id="logPanel">
-        <div id="arena" class="arena" hidden>
-          <div id="arenaPlayer" class="combatant player-side">
-            <div class="sprite" id="arenaPlayerSprite">🥷</div>
-            <div class="combatant-name" id="arenaPlayerName">-</div>
-          </div>
-          <div class="vs">⚔️</div>
-          <div id="arenaEnemy" class="combatant enemy-side">
-            <div class="sprite" id="arenaEnemySprite">❔</div>
-            <div class="combatant-name" id="arenaEnemyName">-</div>
-          </div>
-        </div>
-
         <div id="log" class="log" aria-live="polite"></div>
 
         <div id="textInputRow" class="input-row" hidden>
@@ -45,28 +67,28 @@
 
       <aside class="sidebar">
         <div id="playerCard" class="card" hidden>
-          <h2>Player</h2>
-          <div class="stat-row"><span>Name</span><strong id="pName">-</strong></div>
-          <div class="stat-row"><span>Class</span><strong id="pClass">-</strong></div>
-          <div class="stat-row"><span>Health</span><strong id="pHealth">-</strong></div>
+          <h2><span class="card-icon">🧑‍🎤</span> Player</h2>
+          <div class="stat-row"><span>🏷️ Name</span><strong id="pName">-</strong></div>
+          <div class="stat-row"><span>🎭 Class</span><strong id="pClass">-</strong></div>
+          <div class="stat-row"><span>❤️ Health</span><strong id="pHealth">-</strong></div>
           <div class="bar"><div id="pHealthBar" class="bar-fill health"></div></div>
-          <div class="stat-row"><span>Damage</span><strong id="pDamage">-</strong></div>
-          <div class="stat-row"><span>Money</span><strong id="pMoney">-</strong></div>
-          <div class="stat-row"><span>Weapon</span><strong id="pWeapon">-</strong></div>
-          <div class="stat-row"><span>Armor</span><strong id="pArmor">-</strong></div>
+          <div class="stat-row"><span>⚔️ Damage</span><strong id="pDamage">-</strong></div>
+          <div class="stat-row"><span>💰 Money</span><strong id="pMoney">-</strong></div>
+          <div class="stat-row"><span>🔫 Weapon</span><strong id="pWeapon">-</strong></div>
+          <div class="stat-row"><span>🛡️ Armor</span><strong id="pArmor">-</strong></div>
           <div class="inventory">
-            <span id="invFood" class="chip">Food</span>
-            <span id="invWater" class="chip">Water</span>
-            <span id="invFirewood" class="chip">Firewood</span>
+            <span id="invFood" class="chip">🍖 Food</span>
+            <span id="invWater" class="chip">💧 Water</span>
+            <span id="invFirewood" class="chip">🪵 Firewood</span>
           </div>
         </div>
 
         <div id="enemyCard" class="card enemy-card" hidden>
           <h2 id="eName">Enemy</h2>
-          <div class="stat-row"><span>Health</span><strong id="eHealth">-</strong></div>
+          <div class="stat-row"><span>❤️ Health</span><strong id="eHealth">-</strong></div>
           <div class="bar"><div id="eHealthBar" class="bar-fill enemy"></div></div>
-          <div class="stat-row"><span>Damage</span><strong id="eDamage">-</strong></div>
-          <div class="stat-row"><span>Progress</span><strong id="eProgress">-</strong></div>
+          <div class="stat-row"><span>⚔️ Damage</span><strong id="eDamage">-</strong></div>
+          <div class="stat-row"><span>📊 Progress</span><strong id="eProgress">-</strong></div>
         </div>
       </aside>
     </main>
