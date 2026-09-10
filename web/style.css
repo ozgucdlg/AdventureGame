@@ -111,7 +111,9 @@ body {
 }
 
 .log-panel[data-scene="Intro"],
-.log-panel[data-scene="MainMenu"] {
+.log-panel[data-scene="MainMenu"],
+.battle-screen[data-scene="Intro"],
+.battle-screen[data-scene="MainMenu"] {
   background:
     radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
     radial-gradient(1px 1px at 60% 70%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
@@ -119,25 +121,32 @@ body {
     radial-gradient(1px 1px at 40% 85%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
     linear-gradient(180deg, #10131c 0%, #171a26 100%);
 }
-.log-panel[data-scene="SafeHouse"] {
+.log-panel[data-scene="SafeHouse"],
+.battle-screen[data-scene="SafeHouse"] {
   background: radial-gradient(ellipse at 50% 30%, #3a2412 0%, #1c130a 60%, #120d08 100%);
 }
-.log-panel[data-scene="Cave"] {
+.log-panel[data-scene="Cave"],
+.battle-screen[data-scene="Cave"] {
   background: radial-gradient(ellipse at 50% 20%, #14212a 0%, #0a1216 65%, #05080a 100%);
 }
-.log-panel[data-scene="Forest"] {
+.log-panel[data-scene="Forest"],
+.battle-screen[data-scene="Forest"] {
   background: radial-gradient(ellipse at 50% 20%, #16301f 0%, #0e1f15 60%, #0a150e 100%);
 }
-.log-panel[data-scene="River"] {
+.log-panel[data-scene="River"],
+.battle-screen[data-scene="River"] {
   background: radial-gradient(ellipse at 50% 20%, #123240 0%, #0b1f28 60%, #081920 100%);
 }
-.log-panel[data-scene="Store"] {
+.log-panel[data-scene="Store"],
+.battle-screen[data-scene="Store"] {
   background: radial-gradient(ellipse at 50% 25%, #3a2c14 0%, #221a0c 60%, #171208 100%);
 }
-.log-panel[data-scene="GameOver"] {
+.log-panel[data-scene="GameOver"],
+.battle-screen[data-scene="GameOver"] {
   background: radial-gradient(ellipse at 50% 30%, #3a1414 0%, #1c0a0a 65%, #100606 100%);
 }
-.log-panel[data-scene="Victory"] {
+.log-panel[data-scene="Victory"],
+.battle-screen[data-scene="Victory"] {
   background: radial-gradient(ellipse at 50% 25%, #3a3312 0%, #1c1c0a 60%, #101006 100%);
 }
 
@@ -253,9 +262,190 @@ body {
 }
 
 .option-icon { margin-right: 6px; }
+.card-icon { margin-right: 4px; }
 
 @media (max-width: 480px) {
   .combatant .sprite { font-size: 40px; }
+}
+
+/* ---------- Full-screen cinematic battle overlay ---------- */
+
+.battle-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  color: var(--text);
+  font-family: 'Courier New', ui-monospace, Consolas, monospace;
+  overflow: hidden;
+  animation: battleIn 0.35s ease;
+}
+
+.battle-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.65) 100%);
+  z-index: 1;
+}
+
+@keyframes battleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.battle-screen.shake {
+  animation: screenShake 0.32s ease;
+}
+
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 3px); }
+  40% { transform: translate(6px, -3px); }
+  60% { transform: translate(-4px, 2px); }
+  80% { transform: translate(4px, -2px); }
+}
+
+.impact-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+.impact-flash.flash-white { animation: flashWhite 0.25s ease; }
+.impact-flash.flash-red { animation: flashRed 0.3s ease; }
+@keyframes flashWhite {
+  0% { opacity: 0.5; background: #ffffff; }
+  100% { opacity: 0; background: #ffffff; }
+}
+@keyframes flashRed {
+  0% { opacity: 0.45; background: #ff2d2d; }
+  100% { opacity: 0; background: #ff2d2d; }
+}
+
+.vs-intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--accent);
+  text-shadow: 0 0 24px rgba(79, 209, 139, 0.6), 0 4px 12px rgba(0, 0, 0, 0.6);
+  letter-spacing: 4px;
+  z-index: 5;
+  pointer-events: none;
+  animation: vsPop 0.9s ease forwards;
+}
+
+@keyframes vsPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-8deg); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(3deg); }
+  55% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+
+.battle-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.hud-card {
+  flex: 1 1 0;
+  max-width: 380px;
+  background: rgba(10, 12, 16, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.hud-enemy { text-align: right; }
+.hud-name { font-weight: bold; font-size: 1rem; margin-bottom: 6px; }
+.hud-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+.hud-vs { font-size: 22px; opacity: 0.7; flex: 0 0 auto; }
+
+.bar.big { height: 12px; }
+
+.battle-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  z-index: 2;
+}
+
+.battle-combatant.player-side.lunge { transform: translateX(50px); }
+.battle-combatant.enemy-side.lunge { transform: translateX(-50px); }
+
+.combatant .sprite.big {
+  font-size: 140px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.55));
+}
+
+.battle-shadow {
+  width: 90px;
+  height: 18px;
+  margin: 6px auto 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  filter: blur(2px);
+}
+
+.battle-log {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  min-height: 88px;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  position: relative;
+  z-index: 2;
+}
+
+.battle-log-line {
+  animation: logFadeIn 0.3s ease;
+}
+
+@keyframes logFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.battle-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.battle-actions .option-btn {
+  min-width: 160px;
+  align-items: center;
+  text-align: center;
+  padding: 16px 28px;
+  background: rgba(23, 26, 33, 0.85);
+}
+.battle-actions .option-title { font-size: 1.1rem; }
+
+@media (max-width: 640px) {
+  .combatant .sprite.big { font-size: 84px; }
+  .hud-card { max-width: 46%; }
+  .battle-actions { flex-wrap: wrap; }
+  .vs-intro { font-size: 2.6rem; }
 }
 
 .log {
