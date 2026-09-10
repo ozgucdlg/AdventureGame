@@ -3,6 +3,7 @@ import java.util.List;
 public class GameView {
 
     String state;
+    String scene;
     String prompt;
     String inputType;
     boolean gameOver;
@@ -51,6 +52,7 @@ public class GameView {
         sb.append("{");
         sb.append("\"sessionId\":").append(Json.str(sessionId)).append(",");
         sb.append("\"state\":").append(Json.str(state)).append(",");
+        sb.append("\"scene\":").append(Json.str(scene)).append(",");
         sb.append("\"prompt\":").append(Json.str(prompt)).append(",");
         sb.append("\"inputType\":").append(Json.str(inputType)).append(",");
         sb.append("\"gameOver\":").append(gameOver).append(",");

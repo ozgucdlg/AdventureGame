@@ -18,6 +18,7 @@ public class WebGame {
     private final List<String> log = new ArrayList<>();
     private final List<GameView.Event> events = new ArrayList<>();
     private boolean won = false;
+    private String scene = "Intro";
 
     private Obstacle obstacle;
     private String battleAward;
@@ -38,6 +39,7 @@ public class WebGame {
         state = State.NAME;
         player = null;
         won = false;
+        scene = "Intro";
         obstacle = null;
         log.clear();
         events.clear();
@@ -64,6 +66,7 @@ public class WebGame {
         log.add("Character created : " + player.getcName() + "\tDamage: " + player.getDamage()
                 + "\tHealthy:" + player.getHealthy() + "\tmoney:" + player.getMoney());
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -74,12 +77,14 @@ public class WebGame {
                 if (player.getInv().isFirewood() && player.getInv().isFood() && player.getInv().isWater()) {
                     log.add("Congrats , you won the game 1");
                     won = true;
+                    scene = "Victory";
                     state = State.GAME_OVER;
                     return view(null);
                 }
                 player.setHealthy(player.getrHealthy());
                 log.add("you are get health...............");
                 log.add("Now, you are in safe house...");
+                scene = "SafeHouse";
                 return view("The place you want go :");
             case 2: return enterBattle("Cave", new Zombie(), "Food");
             case 3: return enterBattle("Forest", new Vampire(), "Firewood");
@@ -87,6 +92,7 @@ public class WebGame {
             case 5:
                 log.add("Money :  " + player.getMoney());
                 state = State.STORE_MENU;
+                scene = "Store";
                 return view("your choice :");
             default:
                 return error("Please enter a valid place.");
@@ -99,6 +105,7 @@ public class WebGame {
         battleLocName = name;
         obsCount = obstacle.count();
         enemyIndex = 0;
+        scene = name;
         log.add("Now, rigtht here  " + name + " ");
         log.add("Be careful, there are  here  " + obsCount + " times " + obstacle.getName());
         state = State.BATTLE_DECISION;
@@ -112,6 +119,7 @@ public class WebGame {
             return view("<V>ur or <Kac> :");
         }
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -144,6 +152,7 @@ public class WebGame {
         if (!"attack".equalsIgnoreCase(choice)) {
             event("flee", null, 0);
             state = State.MAIN_MENU;
+            scene = "MainMenu";
             return view("The place you want go :");
         }
 
@@ -174,10 +183,12 @@ public class WebGame {
             if (player.getHealthy() <= 0) {
                 log.add("Oyun bitti !!");
                 event("gameOver", null, 0);
+                scene = "GameOver";
                 state = State.GAME_OVER;
                 return view(null);
             }
             state = State.MAIN_MENU;
+            scene = "MainMenu";
             return view("The place you want go :");
         }
 
@@ -186,6 +197,7 @@ public class WebGame {
         if (player.getHealthy() <= 0) {
             log.add("Oyun bitti !!");
             event("gameOver", null, 0);
+            scene = "GameOver";
             state = State.GAME_OVER;
             return view(null);
         }
@@ -208,6 +220,7 @@ public class WebGame {
         }
         event("victory", battleAward, 0);
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -222,6 +235,7 @@ public class WebGame {
         }
         log.add("program is cancelling...");
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -249,6 +263,7 @@ public class WebGame {
             }
         }
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -275,6 +290,7 @@ public class WebGame {
             }
         }
         state = State.MAIN_MENU;
+        scene = "MainMenu";
         return view("The place you want go :");
     }
 
@@ -286,6 +302,7 @@ public class WebGame {
     private GameView view(String prompt) {
         GameView v = new GameView();
         v.state = state.name();
+        v.scene = scene;
         v.prompt = prompt;
         v.gameOver = state == State.GAME_OVER;
         v.won = won;
