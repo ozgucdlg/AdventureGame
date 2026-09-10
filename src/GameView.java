@@ -9,6 +9,7 @@ public class GameView {
     boolean won;
     List<String> log;
     List<Option> options;
+    List<Event> events;
     PlayerSnapshot player;
     EnemySnapshot enemy;
 
@@ -32,6 +33,17 @@ public class GameView {
     public static class EnemySnapshot {
         String name;
         int health, maxHealth, damage, index, total;
+    }
+
+    public static class Event {
+        final String type, target;
+        final int amount;
+
+        public Event(String type, String target, int amount) {
+            this.type = type;
+            this.target = target;
+            this.amount = amount;
+        }
     }
 
     public String toJson(String sessionId) {
@@ -59,6 +71,17 @@ public class GameView {
               .append(",\"value\":").append(Json.str(o.value))
               .append(",\"label\":").append(Json.str(o.label))
               .append(",\"detail\":").append(Json.str(o.detail))
+              .append("}");
+        }
+        sb.append("],");
+
+        sb.append("\"events\":[");
+        for (int i = 0; i < events.size(); i++) {
+            if (i > 0) sb.append(",");
+            Event e = events.get(i);
+            sb.append("{\"type\":").append(Json.str(e.type))
+              .append(",\"target\":").append(Json.str(e.target))
+              .append(",\"amount\":").append(e.amount)
               .append("}");
         }
         sb.append("],");

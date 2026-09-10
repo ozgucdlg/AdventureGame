@@ -16,6 +16,7 @@ public class WebGame {
     private State state = State.NAME;
     private Player player;
     private final List<String> log = new ArrayList<>();
+    private final List<GameView.Event> events = new ArrayList<>();
     private boolean won = false;
 
     private Obstacle obstacle;
@@ -39,6 +40,7 @@ public class WebGame {
         won = false;
         obstacle = null;
         log.clear();
+        events.clear();
         log.add("Welcome to the Adventure Game !");
         return begin();
     }
@@ -128,6 +130,10 @@ public class WebGame {
         state = State.COMBAT;
     }
 
+    private void event(String type, String target, int amount) {
+        events.add(new GameView.Event(type, target, amount));
+    }
+
     private void afterHit() {
         log.add("Player health : " + player.getHealthy());
         log.add(obstacle.getName() + " health : " + obstacle.getHealth());
@@ -136,20 +142,27 @@ public class WebGame {
     public GameView combatAction(String choice) {
         if (state != State.COMBAT) return error("Not expecting a combat action right now.");
         if (!"attack".equalsIgnoreCase(choice)) {
+            event("flee", null, 0);
             state = State.MAIN_MENU;
             return view("The place you want go :");
         }
 
         log.add("You hit !");
-        obstacle.setHealth(obstacle.getHealth() - player.getTotalDamage());
+        int playerDmg = player.getTotalDamage();
+        obstacle.setHealth(obstacle.getHealth() - playerDmg);
+        event("playerAttack", "enemy", playerDmg);
         afterHit();
 
         if (obstacle.getHealth() > 0) {
             log.add("Enemy hit you ! ");
-            player.setrHealthy(player.getHealthy() - (obstacle.getDamage() - player.getInv().getArmor()));
+            int enemyDmg = obstacle.getDamage() - player.getInv().getArmor();
+            player.setrHealthy(player.getHealthy() - enemyDmg);
+            event("enemyAttack", "player", enemyDmg);
             afterHit();
             return view("<V>ur or <Kac> :");
         }
+
+        event("enemyDefeated", "enemy", 0);
 
         if (obstacle.getHealth() < player.getHealthy()) {
             log.add("You beat the enemy ! ");
@@ -160,6 +173,7 @@ public class WebGame {
         } else {
             if (player.getHealthy() <= 0) {
                 log.add("Oyun bitti !!");
+                event("gameOver", null, 0);
                 state = State.GAME_OVER;
                 return view(null);
             }
@@ -171,6 +185,7 @@ public class WebGame {
 
         if (player.getHealthy() <= 0) {
             log.add("Oyun bitti !!");
+            event("gameOver", null, 0);
             state = State.GAME_OVER;
             return view(null);
         }
@@ -191,6 +206,7 @@ public class WebGame {
             log.add(battleAward + " you won!!  ");
             player.getInv().setFirewood(true);
         }
+        event("victory", battleAward, 0);
         state = State.MAIN_MENU;
         return view("The place you want go :");
     }
@@ -275,6 +291,8 @@ public class WebGame {
         v.won = won;
         v.log = new ArrayList<>(log);
         log.clear();
+        v.events = new ArrayList<>(events);
+        events.clear();
         v.inputType = state == State.NAME ? "text" : "buttons";
         v.options = buildOptions();
         v.player = player == null ? null : snapshotPlayer();

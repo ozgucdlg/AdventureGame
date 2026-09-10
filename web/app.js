@@ -1,6 +1,31 @@
 (function () {
   const state = { sessionId: null };
 
+  const SPRITES = {
+    Samurai: '🥷',
+    Archer: '🏹',
+    Cavailer: '🛡️',
+    Cavalier: '🛡️',
+    Zombie: '🧟',
+    Vampire: '🧛',
+    Bear: '🐻'
+  };
+  function spriteFor(name) {
+    return SPRITES[name] || '❔';
+  }
+
+  const OPTION_ICONS = {
+    Samurai: '🥷', Archer: '🏹', Cavalier: '🛡️',
+    'Safe House': '🏠', Cave: '🕳️', Forest: '🌲', Lake: '🌊', Store: '🏪',
+    Fight: '⚔️', Flee: '🏃', Attack: '🗡️',
+    Guns: '🔫', Armor: '🛡️', Exit: '🚪',
+    Tabanca: '🔫', Kilic: '🗡️', Tufek: '🔫',
+    'Light Armor': '🥋', 'Middle Armor': '🦺', 'Heavy Armor': '🛡️',
+    'Play Again': '🔁'
+  };
+
+  const ANIM_STEP = 650;
+
   const logEl = document.getElementById('log');
   const optionsEl = document.getElementById('options');
   const textRow = document.getElementById('textInputRow');
@@ -9,6 +34,14 @@
   const restartBtn = document.getElementById('restartBtn');
   const playerCard = document.getElementById('playerCard');
   const enemyCard = document.getElementById('enemyCard');
+
+  const arena = document.getElementById('arena');
+  const arenaPlayerBox = document.getElementById('arenaPlayer');
+  const arenaEnemyBox = document.getElementById('arenaEnemy');
+  const arenaPlayerSprite = document.getElementById('arenaPlayerSprite');
+  const arenaPlayerName = document.getElementById('arenaPlayerName');
+  const arenaEnemySprite = document.getElementById('arenaEnemySprite');
+  const arenaEnemyName = document.getElementById('arenaEnemyName');
 
   function appendLog(lines) {
     for (const line of lines) {
@@ -33,7 +66,8 @@
 
       const title = document.createElement('span');
       title.className = 'option-title';
-      title.textContent = opt.label;
+      const icon = OPTION_ICONS[opt.label];
+      title.textContent = (icon ? icon + ' ' : '') + opt.label;
       btn.appendChild(title);
 
       if (opt.detail) {
@@ -48,13 +82,81 @@
     }
   }
 
+  function setOptionsEnabled(enabled) {
+    optionsEl.querySelectorAll('button').forEach((b) => { b.disabled = !enabled; });
+  }
+
+  function renderArena(view) {
+    const inBattle = view.state === 'BATTLE_DECISION' || view.state === 'COMBAT';
+    arena.hidden = !inBattle;
+    if (!inBattle) return;
+    if (view.player) {
+      arenaPlayerSprite.textContent = spriteFor(view.player.class);
+      arenaPlayerName.textContent = view.player.name || 'You';
+    }
+    if (view.enemy) {
+      arenaEnemySprite.textContent = spriteFor(view.enemy.name);
+      arenaEnemyName.textContent = view.enemy.name + ' (' + view.enemy.index + '/' + view.enemy.total + ')';
+    } else {
+      arenaEnemySprite.textContent = '❔';
+      arenaEnemyName.textContent = '???';
+    }
+  }
+
+  function floatDamage(box, text, cls) {
+    const el = document.createElement('div');
+    el.className = 'floating-damage ' + (cls || '');
+    el.textContent = text;
+    box.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  function dmgText(amount) {
+    return amount > 0 ? ('-' + amount) : 'Blocked!';
+  }
+
+  function runEvent(ev) {
+    if (ev.type === 'playerAttack') {
+      arenaPlayerBox.classList.add('lunge');
+      arenaEnemyBox.classList.add('hit');
+      floatDamage(arenaEnemyBox, dmgText(ev.amount), 'enemy-dmg');
+      setTimeout(() => {
+        arenaPlayerBox.classList.remove('lunge');
+        arenaEnemyBox.classList.remove('hit');
+      }, 400);
+    } else if (ev.type === 'enemyAttack') {
+      arenaEnemyBox.classList.add('lunge');
+      arenaPlayerBox.classList.add('hit');
+      floatDamage(arenaPlayerBox, dmgText(ev.amount), 'player-dmg');
+      setTimeout(() => {
+        arenaEnemyBox.classList.remove('lunge');
+        arenaPlayerBox.classList.remove('hit');
+      }, 400);
+    } else if (ev.type === 'enemyDefeated') {
+      arenaEnemyBox.classList.add('defeated');
+      setTimeout(() => arenaEnemyBox.classList.remove('defeated'), 550);
+    } else if (ev.type === 'gameOver') {
+      arenaPlayerBox.classList.add('defeated');
+    }
+  }
+
+  function playEvents(events) {
+    if (!events || events.length === 0) return 0;
+    let delay = 0;
+    for (const ev of events) {
+      setTimeout(() => runEvent(ev), delay);
+      delay += ANIM_STEP;
+    }
+    return delay;
+  }
+
   function renderPlayer(p) {
     if (!p || !p.class) {
       playerCard.hidden = true;
       return;
     }
     playerCard.hidden = false;
-    document.getElementById('pName').textContent = p.name;
+    document.getElementById('pName').textContent = spriteFor(p.class) + ' ' + p.name;
     document.getElementById('pClass').textContent = p.class;
     document.getElementById('pHealth').textContent = p.health + ' / ' + p.maxHealth;
     const pct = Math.max(0, Math.min(100, (p.health / Math.max(1, p.maxHealth)) * 100));
@@ -74,7 +176,7 @@
       return;
     }
     enemyCard.hidden = false;
-    document.getElementById('eName').textContent = e.name;
+    document.getElementById('eName').textContent = spriteFor(e.name) + ' ' + e.name;
     document.getElementById('eHealth').textContent = e.health;
     const pct = Math.max(0, Math.min(100, (e.health / Math.max(1, e.maxHealth)) * 100));
     document.getElementById('eHealthBar').style.width = pct + '%';
@@ -84,6 +186,7 @@
 
   function render(view) {
     appendLog(view.log || []);
+    renderArena(view);
     renderPlayer(view.player);
     renderEnemy(view.enemy);
     renderOptions(view);
@@ -95,6 +198,12 @@
     }
 
     restartBtn.hidden = !view.gameOver;
+
+    const totalDelay = playEvents(view.events);
+    if (totalDelay > 0) {
+      setOptionsEnabled(false);
+      setTimeout(() => setOptionsEnabled(true), totalDelay);
+    }
   }
 
   async function post(url, params) {

@@ -69,6 +69,96 @@ body {
   gap: 12px;
 }
 
+.arena {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  padding: 20px 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.combatant {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 8px;
+  transition: transform 0.15s ease;
+}
+
+.combatant .sprite {
+  font-size: 56px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+  transition: filter 0.15s ease;
+}
+
+.combatant-name {
+  font-weight: bold;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.vs {
+  font-size: 26px;
+  opacity: 0.6;
+  flex: 0 0 auto;
+}
+
+.combatant.player-side.lunge { transform: translateX(16px); }
+.combatant.enemy-side.lunge { transform: translateX(-16px); }
+
+.combatant.hit .sprite {
+  animation: shake 0.4s ease;
+  filter: drop-shadow(0 0 10px var(--danger)) brightness(1.3);
+}
+
+.combatant.defeated .sprite {
+  animation: defeatFall 0.55s ease forwards;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes defeatFall {
+  to { transform: rotate(80deg) translateY(16px); opacity: 0.15; }
+}
+
+.floating-damage {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 1.05rem;
+  color: var(--danger);
+  animation: floatUp 0.9s ease forwards;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.floating-damage.enemy-dmg { color: var(--accent); }
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -40px); }
+}
+
+.option-icon { margin-right: 6px; }
+
+@media (max-width: 480px) {
+  .combatant .sprite { font-size: 40px; }
+}
+
 .log {
   height: 46vh;
   min-height: 260px;
