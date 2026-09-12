@@ -299,6 +299,7 @@
     // leave the last-shown sprite/HUD in place so the outcome animation stays visible.
 
     if (!wasInBattle && inBattle) {
+      battleScreen.classList.remove('death-vignette');
       vsIntro.hidden = false;
       void vsIntro.offsetWidth; // restart the animation
       vsIntro.style.animation = 'none';
@@ -332,6 +333,31 @@
     battleScreen.classList.add('shake');
   }
 
+  function spawnBlood(box, count) {
+    for (let i = 0; i < count; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'blood-drop';
+      drop.style.left = (45 + Math.random() * 10) + '%';
+      drop.style.top = (30 + Math.random() * 15) + '%';
+      const angle = (Math.random() * Math.PI * 2);
+      const dist = 60 + Math.random() * 80;
+      drop.style.setProperty('--bx', (Math.cos(angle) * dist) + 'px');
+      drop.style.setProperty('--by', (Math.abs(Math.sin(angle)) * dist * 0.6 + 50) + 'px');
+      drop.style.setProperty('--br', (Math.random() * 180 - 90) + 'deg');
+      box.appendChild(drop);
+      drop.addEventListener('animationend', () => drop.remove());
+    }
+  }
+
+  function spawnBloodPool(box) {
+    const existing = box.querySelector('.blood-pool');
+    if (existing) existing.remove();
+    const pool = document.createElement('div');
+    pool.className = 'blood-pool';
+    box.appendChild(pool);
+    setTimeout(() => pool.remove(), 1300);
+  }
+
   function runEvent(ev) {
     if (ev.type === 'playerAttack') {
       Sound.playerAttack();
@@ -339,6 +365,7 @@
       battlePlayerBox.classList.add('lunge');
       battleEnemyBox.classList.add('hit');
       floatDamage(battleEnemyBox, dmgText(ev.amount), 'enemy-dmg');
+      if (ev.amount > 0) spawnBlood(battleEnemyBox, 6);
       setTimeout(() => {
         battlePlayerBox.classList.remove('lunge');
         battleEnemyBox.classList.remove('hit');
@@ -350,12 +377,15 @@
       battleEnemyBox.classList.add('lunge');
       battlePlayerBox.classList.add('hit');
       floatDamage(battlePlayerBox, dmgText(ev.amount), 'player-dmg');
+      if (ev.amount > 0) spawnBlood(battlePlayerBox, 6);
       setTimeout(() => {
         battleEnemyBox.classList.remove('lunge');
         battlePlayerBox.classList.remove('hit');
       }, 400);
     } else if (ev.type === 'enemyDefeated') {
       Sound.defeat();
+      shakeScreen();
+      spawnBloodPool(battleEnemyBox);
       battleEnemyBox.classList.add('defeated');
       setTimeout(() => battleEnemyBox.classList.remove('defeated'), 550);
     } else if (ev.type === 'victory') {
@@ -366,6 +396,8 @@
     } else if (ev.type === 'gameOver') {
       Sound.gameOver();
       shakeScreen();
+      battleScreen.classList.add('death-vignette');
+      spawnBlood(battlePlayerBox, 10);
       battlePlayerBox.classList.add('defeated');
     }
   }
